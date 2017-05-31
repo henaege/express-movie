@@ -1,0 +1,18 @@
+body {
+  padding: 30px;
+  font: 40px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+.text-danger {
+  padding: 20px;
+}
+a {
+  color: #00B7FF;
+}
+
+img {
+  max-width: 100%;
+  margin-bottom: 10px;
+}
+
+
