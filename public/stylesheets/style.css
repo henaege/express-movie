@@ -1,10 +1,22 @@
 body {
   padding: 30px;
   font: 40px "Lucida Grande", Helvetica, Arial, sans-serif;
+  /*background-color: black;*/
+  background: radial-gradient(ellipse at 50% 0%, rgb(230, 230, 230) 10%, rgb(50, 120, 160) 40%, rgb(0, 80, 100) 100%);
 }
 
-.text-danger {
+.title {
+  color: black;
   padding: 20px;
+  font-size: 50px;
+  font-weight: 700;
+}
+
+.movie-title {
+  color: black;
+  padding: 20px;
+  font-size: 50px;
+  font-weight: 700;
 }
 a {
   color: #00B7FF;
@@ -15,4 +27,30 @@ img {
   margin-bottom: 10px;
 }
 
+#search-form {
+  padding-bottom: 20px;
+}
 
+input {
+  max-width: 100%;
+  background-color: rgb(200, 200, 200)
+}
+
+.btn {
+  background: radial-gradient(ellipse at 75% 0%, rgb(255, 160, 0) 0%, rgb(200, 50, 50) 60%, rgb(255, 80, 0) 100%);
+}
+
+.info-wrapper {
+  background-color: grey;
+}
+
+.trailer {
+  padding: 20px;
+}
+
+.fancybox-slide--video .fancybox-content {
+	width  : 800px;
+	height : 600px;
+	max-width  : 80%;
+	max-height : 80%;
+}

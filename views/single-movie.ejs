@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.0.47/jquery.fancybox.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.0.47/jquery.fancybox.min.js"></script>
+    <link rel='stylesheet' type="text/css" href="../stylesheets/style.css">
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="title col-xs-10 col-xs-offset-1 text-center">
+          <%= movieData.title %>
+        </div>
+        <div class="col-xs-8 col-xs-offset-2">
+          <form id="search-form" class="form-inline" action="/search" method="post">
+            <input type="text" placeholder="Movie Title" name="searchString" />
+            <button type="submit" class="btn">Search!</button>
+          </form>
+        </div>
+        <div class="col-xs-12 movies">
+              <div class="col-xs-10 col-xs-offset-1 info-wrapper">
+                <div class="col-xs-12">
+                  <h3>Overview:</p><h4><%= movieData.overview %></h4>
+                </div>
+                <div class="inner-wrapper">
+                  <div class="col-xs-4">
+                  <h3>Starring:</h3>
+                    <% for (let i=0; i<5; i++) { %>
+                      <h4><%= castData.cast[i].name %></h4>
+                    <% } %>
+                    <h3>Director:</h3>
+                    <% for (let i=0; i < castData.crew.length; i++) {
+                      if (castData.crew[i].job == 'Director') { %>
+                          <h4><%= castData.crew[i].name %></h4>
+                     <% }
+                    } %>
+                    
+                  </div>
+                  <div class="col-xs-8 text-center">
+                    <img src="<%= imageBaseUrl + movieData.poster_path %>" >
+                  </div>
+                </div>
+                <div class="col-xs-8 col-xs-offset-2 text-center trailer">
+                  <a data-fancybox href="<%= trailer %>"><button class="btn">View the Trailer</button></a>
+                </div>
+              </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
