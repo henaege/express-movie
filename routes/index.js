@@ -26,6 +26,7 @@ router.post('/search', (req, res)=> {
   var searchUrl = apiBaseUrl + '/search/movie?query='+ termUserSearchedFor + '&api_key=' + config.apiKey;
   request.get(searchUrl, (error, response, movieData)=> {
     // res.json(JSON.parse(movieData));
+    req.body.searchString = "";
     var movieData = (JSON.parse(movieData));
     res.render('movie_list', {
       movieData: movieData.results,
@@ -59,10 +60,11 @@ router.get('/movie/:id', (req, res)=> {
     for (let i=0; i < trailerData.results.length; i++){
         if (trailerData.results[i].name == "Official Trailer"){
             var youTubeId = trailerData.results[i].key;
-        } else {
+        } else if (trailerData.results[i].name == "Official Teaser"){
+            var youTubeId = trailerData.results[i].key;
+        }else {
             var youTubeId = trailerData.results[0].key;
         }
-
     }
     console.log(youTubeId)
     var trailerLink = `https://www.youtube.com/watch?v=${youTubeId}`
