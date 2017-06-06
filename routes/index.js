@@ -3,6 +3,16 @@ var router = express.Router();
 var request = require('request');
 var config = require('../config/config');
 
+var mysql = require('mysql');
+var connection = mysql.createConnection({
+  host: config.sql.host,
+  user: config.sql.user,
+  password: config.sql.password,
+  database: config.sql.database
+});
+
+connection.connect();
+
 const apiBaseUrl = 'http://api.themoviedb.org/3';
   const nowPlayingUrl = apiBaseUrl + '/movie/now_playing?api_key='+ config.apiKey;
   const imageBaseUrl = 'http://image.tmdb.org/t/p/w300';
@@ -11,6 +21,7 @@ router.get('/', function(req, res, next) {
   
   request.get(nowPlayingUrl, (error, response, movieData)=> {
     var movieData = JSON.parse(movieData);
+    console.log(req.session);
     res.render('movie_list', { 
       movieData: movieData.results,
       imageBaseUrl: imageBaseUrl,
@@ -86,5 +97,43 @@ router.get('/movie/:id', (req, res)=> {
   });
   
 });
+
+router.get('/register', (req, res)=> {
+  var message = req.query.msg;
+  if(message == "badEmail") {
+    message = "This email is already registered";
+  }
+  res.render('register', {message: message});
+});
+
+router.post('/registerProcess', (req, res)=> {
+  var name = req.body.name;
+  var email = req.body.email;
+  var password = req.body.password;
+  var selectQuery = "SELECT * FROM users WHERE email = ?;";
+  connection.query(selectQuery, [email], (error, results)=> {
+    if (results.length == 0) {
+      var insertQuery = "INSERT INTO users (name,email,password) VALUES (?,?,?);";
+      connection.query(insertQuery, [name,email,password], (error, results)=> {
+      req.session.name = name;
+      req.session.email = email;
+      req.session.loggedin = true;
+      res.redirect('/?msg=registered');
+      });
+    } else {
+      res.redirect('/register/?msg=badEmail');
+    }
+  })
+
+  
+ 
+});
+
+router.get('/login', (req, res)=> {
+  
+  res.render('login', {});
+});
+
+
 
 module.exports = router;
