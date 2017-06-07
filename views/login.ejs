@@ -5,9 +5,16 @@
 <body>
     <% include navbar %>
     <div class="container">
+        <div class="title col-xs-12 text-center">
+          <%= titleHeader %>
+        </div>
         <div class="row">
-            <div class="col-sm-12 text-center">
-                
+            <div class="col-xs-6 col-xs-offset-3 text-center">
+                <form action="/processLogin" method="post">
+                    <input class="input" type="email" placeholder="Enter Email" name="email" />
+                    <input class="input" type="password" placeholder="Enter password" name="password" />
+                    <button class="input btn btn-success" type="submit" class="btn btn-success">Login</button>
+                </form>
             </div>
         </div>
     </div>

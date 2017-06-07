@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var request = require('request');
 var config = require('../config/config');
-
+var bcrypt = require('bcrypt-nodejs');
 var mysql = require('mysql');
 var connection = mysql.createConnection({
   host: config.sql.host,
@@ -25,7 +25,8 @@ router.get('/', function(req, res, next) {
     res.render('movie_list', { 
       movieData: movieData.results,
       imageBaseUrl: imageBaseUrl,
-      titleHeader: 'Welcome to Thunderdome'
+      titleHeader: 'Welcome to Thunderdome',
+      sessionInfo: req.session
      });
   })
   
@@ -103,18 +104,21 @@ router.get('/register', (req, res)=> {
   if(message == "badEmail") {
     message = "This email is already registered";
   }
-  res.render('register', {message: message});
+  res.render('register', {
+    message: message,
+    titleHeader: 'Come with me if you want to live.'});
 });
 
 router.post('/registerProcess', (req, res)=> {
   var name = req.body.name;
   var email = req.body.email;
   var password = req.body.password;
+  var hash = bcrypt.hashSync(password);
   var selectQuery = "SELECT * FROM users WHERE email = ?;";
   connection.query(selectQuery, [email], (error, results)=> {
     if (results.length == 0) {
       var insertQuery = "INSERT INTO users (name,email,password) VALUES (?,?,?);";
-      connection.query(insertQuery, [name,email,password], (error, results)=> {
+      connection.query(insertQuery, [name,email,hash], (error, results)=> {
       req.session.name = name;
       req.session.email = email;
       req.session.loggedin = true;
@@ -131,9 +135,38 @@ router.post('/registerProcess', (req, res)=> {
 
 router.get('/login', (req, res)=> {
   
-  res.render('login', {});
+  res.render('login', {
+    titleHeader: 'They drew first blood, not me.'
+  });
 });
 
+router.post('/processLogin', (req, res)=> {
+  var email = req.body.email;
+  var password = req.body.password;
+  // var selectQuery = "SELECT * FROM users WHERE email=? AND password=?;";
+  var selectQuery = "SELECT * FROM users WHERE email=?;";
+  connection.query(selectQuery, [email], (error, results)=> {
+    if(results.length == 1) {
+      // Match found!
+      // check to see if password matches
+      var match = bcrypt.compareSync(password, results[0].password);
+      if(match == true) {
+        req.session.loggedin = true;
+        req.session.email = results.email;
+        req.session.name = results.name;
+        req.session.email = results.email;
+        res.redirect('/?msg=loggedin');
+      }else {
+        res.redirect('/login/?msg=badLogin')
+      }
+
+      
+    } else {
+      res.redirect('/login/?msg=badLogin');
+    }
+  });
+
+});
 
 
 module.exports = router;
