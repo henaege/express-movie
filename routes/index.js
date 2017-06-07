@@ -91,7 +91,8 @@ router.get('/movie/:id', (req, res)=> {
       movieData: newData,
       imageBaseUrl: imageBaseUrl,
       castData: newCastData,
-      trailer: trailerLink
+      trailer: trailerLink,
+      titleHeader: 'They mostly come at night... mostly.'
     });
   });
   });
